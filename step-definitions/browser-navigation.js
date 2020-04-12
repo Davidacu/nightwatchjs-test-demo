@@ -3,5 +3,7 @@ const { Given, Then, When } = require('cucumber');
 
 
 Given(/I launched the (.*) from (.*) machine/,async(siteId,machineId)=>{
-await client.url("http://google.com");
+    let google = client.page.google();
+    await google.navigate();
+
 });
