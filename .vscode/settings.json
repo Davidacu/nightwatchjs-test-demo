@@ -1,8 +1,6 @@
 {
-    "cucumberautocomplete.onTypeFormat": true,
-    "editor.quickSuggestions": {
-        "comments": false,
-        "strings": true,
-        "other": true
-    }
+    "cucumberautocomplete.steps": [
+        "step-definitions/*.js"
+    ],
+    "cucumberautocomplete.syncfeatures": "features/*feature"
 }
