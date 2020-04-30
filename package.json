@@ -16,7 +16,7 @@
     "nightwatch-api": "^3.0.1"
   },
   "scripts": {
-    "test": "cucumber-js --require cucumber.conf.js --require step-definitions --format node_modules/cucumber-pretty"
+    "test": "cucumber-js --require cucumber.conf.js --require step-definitions --format node_modules/cucumber-pretty --parallel 2"
   },
   "repository": {
     "type": "git",
