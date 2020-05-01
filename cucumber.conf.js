@@ -9,8 +9,8 @@ let {
 setDefaultTimeout(60000);
 
 BeforeAll(async () => {
-  await startWebDriver({ env: "default" });
-  await createSession({ env: "default" });
+  await startWebDriver({ env: process.env.NIGHTWATCH_ENV || "chrome" });
+  await createSession();
 });
 
 AfterAll(async () => {
