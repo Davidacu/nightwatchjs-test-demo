@@ -3,7 +3,7 @@ pipeline {
         dockerfile true
     }
 
-    Stages{
+    stages{
         stage('Build Image'){
             steps{
                 checkout scm
