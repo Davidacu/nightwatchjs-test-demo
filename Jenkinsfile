@@ -3,7 +3,8 @@ pipeline{
 	stages{
 		stage('Test'){
 			steps{
-				echo 'Hellow World'
+			 step([$class: 'DockerComposeBuilder', dockerComposeFile: 'Dockercompose.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
+
 			}
 		}
 	}
