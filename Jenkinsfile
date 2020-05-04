@@ -1,10 +1,9 @@
 pipeline{
-	agent {dockerfile true}
+	agent any
 	stages{
 		stage('Test'){
 			steps{
-			 step([$class: 'DockerComposeBuilder', dockerComposeFile: 'DockerCompose.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
-
+                    sh 'docker-compose version'
 			}
 		}
 	}
