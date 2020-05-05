@@ -1,7 +1,8 @@
 pipeline{
 	agent {
           docker{
-               image 'tmaier/docker-compose'          
+               image 'tmaier/docker-compose'      
+               args  '--env DOCKER_HOST=tcp://docker:2376'    
           }
      }
 	stages{
