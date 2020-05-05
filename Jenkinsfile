@@ -1,9 +1,13 @@
 pipeline{
-	agent any
+	agent {
+          docker{
+               image 'tmaier/docker-compose'          
+          }
+     }
 	stages{
 		stage('Test'){
 			steps{
-                    sh 'docker version'
+                    sh 'docker-compose up'
 			}
 		}
 	}
