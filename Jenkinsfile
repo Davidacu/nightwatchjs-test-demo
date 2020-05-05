@@ -7,7 +7,9 @@ pipeline{
 	stages{
 		stage('Test'){
 			steps{
-                    sh 'sudo docker-compose up'
+                    sh 'printenv'
+                    sh 'docker-compose up'
+
 			}
 		}
 	}
