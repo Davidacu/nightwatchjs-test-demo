@@ -8,7 +8,7 @@ pipeline{
 		stage('Test'){
 			steps{
                     sh 'printenv'
-                    sh 'docker-compose up'
+                    sh 'docker-compose -f $WORKSPACE/docker-compose.yml up'
 
 			}
 		}
