@@ -4,9 +4,11 @@
     "apiUrl": "http://localhost:3000"
   },
 
-  "user": {
-    "username": "davidsk8910",
-    "email": "david.acu02@gmail.com",
-    "password": "qafirst"
+  "users": {
+    "james": {
+      "username": "james",
+      "email": "david.acu02@gmail.com",
+      "password": "qafirst"
+    }
   }
 }

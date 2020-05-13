@@ -4,22 +4,34 @@ const fs = require("fs");
 
 let rawJson = fs.readFileSync("conduit.conf.json");
 let json = JSON.parse(rawJson);
-let user = json.user;
-
+let users = json.users;
 let homePage = client.page.home();
-When(/a user sign up with valid credentials/, async () => {
+
+Given(/that (.*) has navigated to the \"(.*)\" page/, async (user, page) => {
+  switch (page.toLowerCase()) {
+    case "conduit home":
+      return homePage.navigate();
+      break;
+    default:
+      return false;
+  }
+});
+
+When(/(.*) sign up with valid credentials/, async (user) => {
+  let james = users.james;
   let navBar = homePage.section.navBar;
   navBar.click("@signUpBtn");
   let signUp = client.page.signup();
   signUp.assert.containsText("@header", "Sign Up");
-  signUp.setValue("@username", user.username);
-  signUp.setValue("@email", user.email);
-  signUp.setValue("@password", user.password);
+  signUp.setValue("@username", james.username);
+  signUp.setValue("@email", james.email);
+  signUp.setValue("@password", james.password);
   return signUp.click("@signUpBtn");
 });
 
-Then(/the registered username is shown at navigation bar/, async () => {
-  return homePage.expect.section("@navBar").text.to.contain(user.username);
+Then(/(.*) registered username is shown at navigation bar/, async (user) => {
+  let james = users.james;
+  return homePage.expect.section("@navBar").text.to.contain(james.username);
 });
 
 Then(/the navigation bar displays \"(.*)\"/, async (item) => {

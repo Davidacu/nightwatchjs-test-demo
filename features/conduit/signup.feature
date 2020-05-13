@@ -4,9 +4,9 @@ Feature: Register
 
     @conduit
     Scenario: Register a user with valid credentials
-        Given I navigate to Conduit home page
-        When a user sign up with valid credentials
-        Then the registered username is shown at navigation bar
+        Given that James has navigated to the "Conduit Home" page
+        When James sign up with valid credentials
+        Then James registered username is shown at navigation bar
         And the navigation bar displays "Home"
         And the navigation bar displays "New Post"
         And the navigation bar displays "Settings"
