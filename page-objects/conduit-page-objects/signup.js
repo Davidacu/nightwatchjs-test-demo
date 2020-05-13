@@ -15,5 +15,8 @@ module.exports = {
     signUpBtn: {
       selector: 'button[type="submit"]',
     },
+    errorMsg: {
+      selector: 'ul[class="error-messages"]',
+    },
   },
 };

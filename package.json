@@ -4,6 +4,7 @@
   "description": "a test demo project using nightwatch.js",
   "main": "index.js",
   "dependencies": {
+    "axios": "^0.19.2",
     "knex": "^0.21.1",
     "minimist": "^1.2.5",
     "nightwatch": "^1.3.4",

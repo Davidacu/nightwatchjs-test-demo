@@ -1,6 +1,7 @@
 const { Given, Then, When } = require("cucumber");
 const { client } = require("nightwatch-api");
 const fs = require("fs");
+const registerUser = require("../../helpers/api");
 
 let rawJson = fs.readFileSync("conduit.conf.json");
 let json = JSON.parse(rawJson);
@@ -11,9 +12,17 @@ Given(/that (.*) has navigated to the \"(.*)\" page/, async (user, page) => {
   switch (page.toLowerCase()) {
     case "conduit home":
       return homePage.navigate();
-      break;
     default:
       return false;
+  }
+});
+
+Given(/that James has already registered to Conduit app/, async () => {
+  try {
+    let request = await registerUser();
+    console.log("response:", request.data);
+  } catch (error) {
+    console.log("error:", error);
   }
 });
 
@@ -29,6 +38,45 @@ When(/(.*) sign up with valid credentials/, async (user) => {
   return signUp.click("@signUpBtn");
 });
 
+When(/(.*) sign up with (.*) email/, async (user, emailType) => {
+  let james = users.james;
+  let email = emailType === "invalid" ? "james@com" : "";
+
+  let navBar = homePage.section.navBar;
+  navBar.click("@signUpBtn");
+  let signUp = client.page.signup();
+  signUp.assert.containsText("@header", "Sign Up");
+  signUp.setValue("@username", james.username);
+  signUp.setValue("@email", email);
+  signUp.setValue("@password", james.password);
+  return signUp.click("@signUpBtn");
+});
+
+When(/(.*) sign up with empty username/, async (user) => {
+  let james = users.james;
+  let navBar = homePage.section.navBar;
+
+  navBar.click("@signUpBtn");
+  let signUp = client.page.signup();
+  signUp.assert.containsText("@header", "Sign Up");
+  signUp.setValue("@username", "");
+  signUp.setValue("@email", james.email);
+  signUp.setValue("@password", james.password);
+  return signUp.click("@signUpBtn");
+});
+
+When(/(.*) sign up with empty password/, async (user) => {
+  let james = users.james;
+  let navBar = homePage.section.navBar;
+
+  navBar.click("@signUpBtn");
+  let signUp = client.page.signup();
+  signUp.assert.containsText("@header", "Sign Up");
+  signUp.setValue("@username", james.username);
+  signUp.setValue("@email", james.email);
+  signUp.setValue("@password", "");
+  return signUp.click("@signUpBtn");
+});
 Then(/(.*) registered username is shown at navigation bar/, async (user) => {
   let james = users.james;
   return homePage.expect.section("@navBar").text.to.contain(james.username);
@@ -48,4 +96,9 @@ Then(/Your Feed is empty/, async () => {
   return homePage.expect
     .element("@articles")
     .text.to.contain("No articles are here... yet.");
+});
+
+Then(/error message \"(.*)\" is shown/, async (error) => {
+  let signUp = client.page.signup();
+  return signUp.expect.element("@errorMsg").text.to.contain(error);
 });
