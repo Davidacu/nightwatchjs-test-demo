@@ -1,9 +1,16 @@
-let { setDefaultTimeout, AfterAll, BeforeAll, Before } = require("cucumber");
+let {
+  setDefaultTimeout,
+  AfterAll,
+  BeforeAll,
+  Before,
+  After,
+} = require("cucumber");
 let {
   createSession,
   closeSession,
   startWebDriver,
   stopWebDriver,
+  client,
 } = require("nightwatch-api");
 let cleanDatabase = require("./helpers/db-utils");
 
@@ -21,4 +28,10 @@ AfterAll(async () => {
 
 Before({ tags: "@conduit" }, async () => {
   await cleanDatabase();
+});
+
+After({ tags: "@conduit" }, async () => {
+  return client.execute(function () {
+    return window.localStorage.clear();
+  });
 });

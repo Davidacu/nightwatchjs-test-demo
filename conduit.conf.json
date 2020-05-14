@@ -1,6 +1,14 @@
 {
   "env": {
-    "appUrl": "http:localhost:4100",
-    "apiUrl": "http:localhost:3000"
+    "appUrl": "http://localhost:4100",
+    "apiUrl": "http://localhost:3000"
+  },
+
+  "users": {
+    "james": {
+      "username": "james",
+      "email": "david.acu02@gmail.com",
+      "password": "qafirst"
+    }
   }
 }

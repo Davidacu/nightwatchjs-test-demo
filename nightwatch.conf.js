@@ -9,7 +9,7 @@ module.exports = {
   src_folders: [],
 
   // See https://nightwatchjs.org/guide/working-with-page-objects/
-  page_objects_path: "./page-objects",
+  page_objects_path: ["./page-objects", "./page-objects/conduit-page-objects"],
 
   // See https://nightwatchjs.org/guide/extending-nightwatch/#writing-custom-commands
   custom_commands_path: "",
@@ -39,12 +39,12 @@ module.exports = {
         : {
             port: 4444,
             start_process: true,
-            server_path: seleniumServer.path,
+            server_path: Services.seleniumServer,
             cli_args: {
-              "webdriver.chrome.driver": chromeDriver.path,
-              "webdriver.gecko.driver": geckoDriver.path,
-              "webdriver.ie.driver": ieDriver.path,
-              "webdriver.edge.driver": edgeDriver.path,
+              "webdriver.chrome.driver": Services.chromedriver.path,
+              //"webdriver.gecko.driver": geckoDriver.path,
+              // "webdriver.ie.driver": ieDriver.path,
+              //"webdriver.edge.driver": edgeDriver.path,
             },
           },
     },
@@ -86,7 +86,7 @@ module.exports = {
 
 function loadServices() {
   try {
-    Services.seleniumServer = require("selenium-server");
+    Services.seleniumServer = require("selenium-server").path;
   } catch (err) {}
 
   try {

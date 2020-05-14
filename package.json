@@ -4,10 +4,12 @@
   "description": "a test demo project using nightwatch.js",
   "main": "index.js",
   "dependencies": {
+    "axios": "^0.19.2",
     "knex": "^0.21.1",
     "minimist": "^1.2.5",
     "nightwatch": "^1.3.4",
     "optimist": "^0.6.1",
+    "selenium-server": "^3.141.59",
     "sqlite3": "^4.2.0"
   },
   "devDependencies": {
@@ -19,7 +21,7 @@
   },
   "scripts": {
     "test": "cucumber-js --require cucumber.conf.js --require step-definitions --format node_modules/cucumber-pretty --parallel 2",
-    "test-conduit": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/test.feature"
+    "test-conduit": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/signup.feature"
   },
   "repository": {
     "type": "git",
