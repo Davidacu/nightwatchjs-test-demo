@@ -7,13 +7,21 @@ let rawJson = fs.readFileSync("conduit.conf.json");
 let json = JSON.parse(rawJson);
 let users = json.users;
 let homePage = client.page.home();
+let signUp = client.page.signup();
 
 Given(/that (.*) has navigated to the \"(.*)\" page/, async (user, page) => {
   switch (page.toLowerCase()) {
     case "conduit home":
       return homePage.navigate();
+    case "conduit sign in":
+      homePage.navigate();
+      let navBar = homePage.section.navBar;
+      navBar.click("@signInBtn");
+      const loginPage = client.page.login();
+
+      return await loginPage.assert.urlContains("/login");
     default:
-      return false;
+      return undefined;
   }
 });
 
@@ -30,7 +38,6 @@ When(/(.*) sign up with valid credentials/, async (user) => {
   let james = users.james;
   let navBar = homePage.section.navBar;
   navBar.click("@signUpBtn");
-  let signUp = client.page.signup();
   signUp.assert.containsText("@header", "Sign Up");
   signUp.setValue("@username", james.username);
   signUp.setValue("@email", james.email);
@@ -44,7 +51,6 @@ When(/(.*) sign up with (.*) email/, async (user, emailType) => {
 
   let navBar = homePage.section.navBar;
   navBar.click("@signUpBtn");
-  let signUp = client.page.signup();
   signUp.assert.containsText("@header", "Sign Up");
   signUp.setValue("@username", james.username);
   signUp.setValue("@email", email);
@@ -57,7 +63,6 @@ When(/(.*) sign up with empty username/, async (user) => {
   let navBar = homePage.section.navBar;
 
   navBar.click("@signUpBtn");
-  let signUp = client.page.signup();
   signUp.assert.containsText("@header", "Sign Up");
   signUp.setValue("@username", "");
   signUp.setValue("@email", james.email);
@@ -70,7 +75,6 @@ When(/(.*) sign up with empty password/, async (user) => {
   let navBar = homePage.section.navBar;
 
   navBar.click("@signUpBtn");
-  let signUp = client.page.signup();
   signUp.assert.containsText("@header", "Sign Up");
   signUp.setValue("@username", james.username);
   signUp.setValue("@email", james.email);
@@ -99,6 +103,10 @@ Then(/Your Feed is empty/, async () => {
 });
 
 Then(/error message \"(.*)\" is shown/, async (error) => {
-  let signUp = client.page.signup();
   return signUp.expect.element("@errorMsg").text.to.contain(error);
+});
+
+Then(/the Sign up page is shown/, async () => {
+  client.assert.urlContains("/register");
+  return signUp.assert.containsText("@header", "Sign Up");
 });
