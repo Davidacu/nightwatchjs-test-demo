@@ -22,7 +22,8 @@
   "scripts": {
     "test": "cucumber-js --require cucumber.conf.js --require step-definitions --format node_modules/cucumber-pretty --parallel 2",
     "test-conduit-signup": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/signup.feature",
-    "test-conduit-login": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/login.feature"
+    "test-conduit-login": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/login.feature",
+    "test-conduit-debug": "cucumber-js --require cucumber.conf.js --require step-definitions features/debug/debug-login.feature"
   },
   "repository": {
     "type": "git",
