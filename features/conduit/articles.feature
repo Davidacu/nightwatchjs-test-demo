@@ -19,6 +19,14 @@ Feature: Articles
     @conduit
     Scenario: Edit Post
         Given that James has just published an article at conduit
-        And James is at the articles page
+        And Jame's article is open
         When James edits the article
         Then James article is updated
+
+    @conduit
+    Scenario: Delete Post
+        Given that James has just published an article at conduit
+        And Jame's article is open
+        When James deletes the article
+        Then Jame's article is not longer shown
+        And the Home page is shown

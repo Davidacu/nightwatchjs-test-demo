@@ -105,8 +105,3 @@ Then(/Your Feed is empty/, async () => {
 Then(/error message \"(.*)\" is shown/, async (error) => {
   return signUp.expect.element("@errorMsg").text.to.contain(error);
 });
-
-Then(/the Sign up page is shown/, async () => {
-  client.assert.urlContains("/register");
-  return signUp.assert.containsText("@header", "Sign Up");
-});

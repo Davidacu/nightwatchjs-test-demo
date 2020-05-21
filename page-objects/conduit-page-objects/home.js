@@ -2,7 +2,15 @@ const fs = require("fs");
 let rawJson = fs.readFileSync("conduit.conf.json");
 let json = JSON.parse(rawJson);
 
+const commands = {
+  isAt: function () {
+    console.log(this);
+    return this.api.assert.urlEquals(this.url + "/");
+  },
+};
+
 module.exports = {
+  commands: [commands],
   url: json.env.appUrl,
   sections: {
     navBar: {

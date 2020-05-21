@@ -66,7 +66,7 @@ Given(/that James has just published an article at conduit/, async () => {
   );
 });
 
-Given(/James is at the articles page/, async () => {
+Given(/Jame's article is open/, async () => {
   return client.url(`${appUrl}/article/${article.title.toLowerCase()}`);
 });
 
@@ -130,4 +130,15 @@ Then(/James article is updated/, async () => {
   return articlePage.expect
     .element("@publishedDate")
     .text.to.equal(publishedDate);
+});
+
+When(/(.*) deletes the article/, async (user) => {
+  const articlePage = client.page.article();
+  return articlePage.click("@deleteBtn");
+});
+
+Then(/Jame's article is not longer shown/, async () => {
+  return client.assert.not.urlContains(
+    `/article/${article.title.toLowerCase()}`
+  );
 });
