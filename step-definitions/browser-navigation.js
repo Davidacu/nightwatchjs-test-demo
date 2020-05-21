@@ -11,3 +11,10 @@ Given(/I navigate to (.*) page/, async (siteId) => {
       return await homePage.navigate().assert.title("Conduit");
   }
 });
+
+When(/James navigates to (.*) page/, async (siteId) => {
+  switch (siteId.toLowerCase()) {
+    case "conduit home":
+      return await homePage.navigate().assert.title("Conduit");
+  }
+});

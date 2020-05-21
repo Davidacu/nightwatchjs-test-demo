@@ -47,3 +47,5 @@ Given(/that James has already logged in to conduit/, async () => {
 
   return client.refresh();
 });
+
+Given(/that James has not logged in at conduit/, () => {});

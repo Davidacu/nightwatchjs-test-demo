@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^0.19.2",
+    "chromedriver": "^83.0.0",
     "knex": "^0.21.1",
     "minimist": "^1.2.5",
     "nightwatch": "^1.3.4",
@@ -13,7 +14,6 @@
     "sqlite3": "^4.2.0"
   },
   "devDependencies": {
-    "chromedriver": "^81.0.0",
     "cucumber": "^6.0.5",
     "cucumber-pretty": "^6.0.0",
     "geckodriver": "^1.19.1",
@@ -21,9 +21,10 @@
   },
   "scripts": {
     "test": "cucumber-js --require cucumber.conf.js --require step-definitions --format node_modules/cucumber-pretty --parallel 2",
-    "test-conduit-signup": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/signup.feature",
-    "test-conduit-login": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/login.feature",
-    "test-conduit-debug": "cucumber-js --require cucumber.conf.js --require step-definitions features/debug/debug-login.feature"
+    "test-conduit-signup": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/signup.feature --format node_modules/cucumber-pretty",
+    "test-conduit-login": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/login.feature --format node_modules/cucumber-pretty",
+    "test-conduit-articles": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/articles.feature --format node_modules/cucumber-pretty",
+    "test-conduit-debug": "cucumber-js --require cucumber.conf.js --require step-definitions features/debug/debug-login.feature --format node_modules/cucumber-pretty"
   },
   "repository": {
     "type": "git",

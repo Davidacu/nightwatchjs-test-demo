@@ -4,6 +4,7 @@ let rawJson = fs.readFileSync("conduit.conf.json");
 let json = JSON.parse(rawJson);
 let apiUrl = json.env.apiUrl;
 let user = json.users.james;
+let article = json.articles.nightwatch;
 
 exports.registerUser = () => {
   let endpoint = `${apiUrl}/api/users`;
@@ -17,4 +18,22 @@ exports.loginUser = (userId = user) => {
   let payload = { user: { email: user.email, password: user.password } };
   console.log("login user...");
   return axios.post(endpoint, payload);
+};
+
+exports.publishArticle = async (userId = user) => {
+  const response = await this.registerUser();
+  const token = response.data.user.token;
+  let endpoint = `${apiUrl}/api/articles`;
+  let payload = {
+    article: {
+      title: article.title,
+      description: article.description,
+      body: article.body,
+      tagList: article.tagList,
+    },
+  };
+  console.log("publishing article...");
+  return axios.post(endpoint, payload, {
+    headers: { authorization: `Token ${token}` },
+  });
 };

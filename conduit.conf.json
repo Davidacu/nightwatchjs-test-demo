@@ -10,5 +10,14 @@
       "email": "david.acu02@gmail.com",
       "password": "qafirst"
     }
+  },
+  "articles": {
+    "nightwatch": {
+      "title": "NightwatchJS",
+      "description": "End-to-End testing frameworks",
+      "body": "Nightwatch.js is an integrated, easy to use End-to-End testing solution for web applications and websites, written in Node.JS.",
+      "tagList": ["nightwatchjs", "e2e", "webDriver"],
+      "author": "james"
+    }
   }
 }

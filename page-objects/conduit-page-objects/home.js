@@ -18,6 +18,9 @@ module.exports = {
         homeBtn: {
           selector: 'a[href="/"]',
         },
+        newPost: {
+          selector: 'a[href="/editor"]',
+        },
       },
     },
   },
