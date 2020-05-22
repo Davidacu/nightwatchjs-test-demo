@@ -1,4 +1,9 @@
+const fs = require("fs");
+let rawJson = fs.readFileSync("conduit.conf.json");
+let json = JSON.parse(rawJson);
+
 module.exports = {
+  url: `${json.env.appUrl}/login`,
   elements: {
     header: {
       selector: "h1",

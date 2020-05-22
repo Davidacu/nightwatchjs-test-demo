@@ -35,17 +35,10 @@ When(/James press \"(.*)\"/, async (fieldId) => {
 
 Given(/that James has already logged in to conduit/, async () => {
   await registerUser();
-  const request = await loginUser();
-  const homePage = client.page.home();
-  await homePage.navigate();
-  client.execute(
-    function () {
-      return window.localStorage.setItem("jwt", arguments[0]);
-    },
-    [request.data.user.token]
-  );
-
-  return client.refresh();
+  return loginUser();
 });
 
-Given(/that James has not logged in at conduit/, () => {});
+Given(/James has not logged in at conduit/, () => {
+  const homePage = client.page.home();
+  return homePage.expect.section("@navBar").text.to.not.contain(james.username);
+});

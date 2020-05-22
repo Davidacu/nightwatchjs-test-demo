@@ -6,5 +6,7 @@ exports.createPage = function (pageId) {
       return client.page.signup();
     case "home":
       return client.page.home();
+    case "login":
+      return client.page.login();
   }
 };

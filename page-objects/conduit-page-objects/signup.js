@@ -4,7 +4,7 @@ let json = JSON.parse(rawJson);
 let appUrl = json.env.appUrl;
 
 const commands = {
-  isAt: () => {
+  isAt: function () {
     this.assert.urlEquals(this.url);
   },
 };

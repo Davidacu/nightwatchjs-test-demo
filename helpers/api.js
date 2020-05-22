@@ -1,4 +1,5 @@
 const axios = require("axios").default;
+const { client } = require("nightwatch-api");
 const fs = require("fs");
 let rawJson = fs.readFileSync("conduit.conf.json");
 let json = JSON.parse(rawJson);
@@ -13,11 +14,19 @@ exports.registerUser = () => {
   return axios.post(endpoint, payload);
 };
 
-exports.loginUser = (userId = user) => {
+exports.loginUser = async (userId = user) => {
   let endpoint = `${apiUrl}/api/users/login`;
   let payload = { user: { email: user.email, password: user.password } };
   console.log("login user...");
-  return axios.post(endpoint, payload);
+  const response = await axios.post(endpoint, payload);
+  await client.execute(
+    function () {
+      return window.localStorage.setItem("jwt", arguments[0]);
+    },
+    [response.data.user.token]
+  );
+
+  return client.refresh();
 };
 
 exports.publishArticle = async (userId = user) => {
@@ -33,7 +42,8 @@ exports.publishArticle = async (userId = user) => {
     },
   };
   console.log("publishing article...");
-  return axios.post(endpoint, payload, {
+  await axios.post(endpoint, payload, {
     headers: { authorization: `Token ${token}` },
   });
+  return this.loginUser();
 };

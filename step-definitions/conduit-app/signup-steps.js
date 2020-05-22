@@ -1,7 +1,7 @@
 const { Given, Then, When } = require("cucumber");
 const { client } = require("nightwatch-api");
 const fs = require("fs");
-const registerUser = require("../../helpers/api");
+const { registerUser } = require("../../helpers/api");
 
 let rawJson = fs.readFileSync("conduit.conf.json");
 let json = JSON.parse(rawJson);

@@ -56,14 +56,7 @@ Then(/James new article is loaded properly/, async () => {
 });
 
 Given(/that James has just published an article at conduit/, async () => {
-  let response = await publishArticle();
-  const token = response.config.headers.authorization.replace("Token ", "");
-  await client.execute(
-    function () {
-      return window.localStorage.setItem("jwt", arguments[0]);
-    },
-    [token]
-  );
+  return await publishArticle();
 });
 
 Given(/Jame's article is open/, async () => {
