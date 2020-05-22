@@ -25,13 +25,8 @@ Given(/that (.*) has navigated to the \"(.*)\" page/, async (user, page) => {
   }
 });
 
-Given(/that James has already registered to Conduit app/, async () => {
-  try {
-    let request = await registerUser();
-    console.log("response:", request.data);
-  } catch (error) {
-    console.log("error:", error);
-  }
+Given(/(.*) has already registered to Conduit app/, async (user) => {
+  return await registerUser(user.toLowerCase());
 });
 
 When(/(.*) sign up with valid credentials/, async (user) => {

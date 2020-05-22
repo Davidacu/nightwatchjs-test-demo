@@ -11,6 +11,20 @@ const {
   publishArticle,
 } = require("../../helpers/api");
 
+Given(
+  /an article posted by (.*) is displayed at the global feed/,
+  async (user) => {
+    const homePage = client.page.home();
+
+    await publishArticle(user.toLowerCase());
+    homePage.click("@globalFeedBtn");
+  }
+);
+
+When(/(.*) opens (.*) article/, async (user, author) => {
+  const homePage = client.page.home();
+  return homePage.openArticleByAuthor(author);
+});
 When(/James publishes a new article/, async () => {
   const homePage = client.page.home();
   const navBar = homePage.section.navBar;
@@ -55,13 +69,12 @@ Then(/James new article is loaded properly/, async () => {
     .text.to.equal(publishedDate);
 });
 
-Given(/that James has just published an article at conduit/, async () => {
-  return await publishArticle();
-});
-
-Given(/Jame's article is open/, async () => {
+Given(/an article posted by (.*) is currently displayed/, async (user) => {
+  await publishArticle(user.toLowerCase());
   return client.url(`${appUrl}/article/${article.title.toLowerCase()}`);
 });
+
+Given(/Jame's article is open/, async () => {});
 
 When(/James edits the article/, async () => {
   const articlePage = client.page.article();
@@ -134,4 +147,14 @@ Then(/Jame's article is not longer shown/, async () => {
   return client.assert.not.urlContains(
     `/article/${article.title.toLowerCase()}`
   );
+});
+
+Then(/John cannot delete the article/, async () => {
+  const articlePage = client.page.article();
+  return articlePage.assert.not.elementPresent("@deleteBtn");
+});
+
+Then(/John cannot edit the article/, async () => {
+  const articlePage = client.page.article();
+  return articlePage.assert.not.elementPresent("@editBtn");
 });

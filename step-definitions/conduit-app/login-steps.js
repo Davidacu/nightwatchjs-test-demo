@@ -4,7 +4,7 @@ const fs = require("fs");
 let rawJson = fs.readFileSync("conduit.conf.json");
 let json = JSON.parse(rawJson);
 let james = json.users.james;
-const { registerUser, loginUser } = require("../../helpers/api");
+const { loginUser } = require("../../helpers/api");
 
 When(/James attemps to login with (.*)/, async (fieldId) => {
   const homePage = client.page.home();
@@ -33,9 +33,8 @@ When(/James press \"(.*)\"/, async (fieldId) => {
   return undefined;
 });
 
-Given(/that James has already logged in to conduit/, async () => {
-  await registerUser();
-  return loginUser();
+Given(/(.*) has already logged in to conduit/, async (user) => {
+  return loginUser(user.toLowerCase());
 });
 
 Given(/James has not logged in at conduit/, () => {

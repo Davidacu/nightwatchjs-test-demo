@@ -4,18 +4,20 @@ const fs = require("fs");
 let rawJson = fs.readFileSync("conduit.conf.json");
 let json = JSON.parse(rawJson);
 let apiUrl = json.env.apiUrl;
-let user = json.users.james;
 let article = json.articles.nightwatch;
 
-exports.registerUser = () => {
+exports.registerUser = (userId) => {
   let endpoint = `${apiUrl}/api/users`;
+
+  let user = json.users[userId];
   let payload = { user };
   console.log("registering user...");
   return axios.post(endpoint, payload);
 };
 
-exports.loginUser = async (userId = user) => {
+exports.loginUser = async (userId) => {
   let endpoint = `${apiUrl}/api/users/login`;
+  let user = json.users[userId];
   let payload = { user: { email: user.email, password: user.password } };
   console.log("login user...");
   const response = await axios.post(endpoint, payload);
@@ -29,8 +31,8 @@ exports.loginUser = async (userId = user) => {
   return client.refresh();
 };
 
-exports.publishArticle = async (userId = user) => {
-  const response = await this.registerUser();
+exports.publishArticle = async (userId) => {
+  const response = await this.registerUser(userId);
   const token = response.data.user.token;
   let endpoint = `${apiUrl}/api/articles`;
   let payload = {
@@ -42,8 +44,7 @@ exports.publishArticle = async (userId = user) => {
     },
   };
   console.log("publishing article...");
-  await axios.post(endpoint, payload, {
+  return axios.post(endpoint, payload, {
     headers: { authorization: `Token ${token}` },
   });
-  return this.loginUser();
 };

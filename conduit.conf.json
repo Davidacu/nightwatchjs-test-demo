@@ -9,6 +9,11 @@
       "username": "james",
       "email": "david.acu02@gmail.com",
       "password": "qafirst"
+    },
+    "john": {
+      "username": "john",
+      "email": "david.acu0291@gmail.com",
+      "password": "qafirst"
     }
   },
   "articles": {
