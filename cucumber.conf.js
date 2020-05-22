@@ -28,6 +28,7 @@ AfterAll(async () => {
 
 Before({ tags: "@conduit" }, async () => {
   await cleanDatabase();
+  await client.page.home().navigate();
 });
 
 After({ tags: "@conduit" }, async () => {

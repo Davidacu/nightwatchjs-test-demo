@@ -2,7 +2,20 @@ const fs = require("fs");
 let rawJson = fs.readFileSync("conduit.conf.json");
 let json = JSON.parse(rawJson);
 
+const commands = {
+  isAt: function () {
+    return this.api.assert.urlEquals(this.url + "/");
+  },
+  openArticleByAuthor: function (author) {
+    return this.click({
+      selector: `//a[contains(@class,'author') and contains(@href,${author})]//ancestor::div[@class='article-preview']//a[@class='preview-link']//h1`,
+      locateStrategy: "xpath",
+    });
+  },
+};
+
 module.exports = {
+  commands: [commands],
   url: json.env.appUrl,
   sections: {
     navBar: {
@@ -18,12 +31,19 @@ module.exports = {
         homeBtn: {
           selector: 'a[href="/"]',
         },
+        newPost: {
+          selector: 'a[href="/editor"]',
+        },
       },
     },
   },
   elements: {
     activeFeed: {
       selector: 'a[class="nav-link active"]',
+    },
+    globalFeedBtn: {
+      selector: '//a[contains(text(),"Global Feed")]',
+      locateStrategy: "xpath",
     },
     articles: {
       selector: 'div[class="article-preview"]',

@@ -1,7 +1,7 @@
 const { Given, Then, When } = require("cucumber");
 const { client } = require("nightwatch-api");
 const fs = require("fs");
-const registerUser = require("../../helpers/api");
+const { registerUser } = require("../../helpers/api");
 
 let rawJson = fs.readFileSync("conduit.conf.json");
 let json = JSON.parse(rawJson);
@@ -25,13 +25,8 @@ Given(/that (.*) has navigated to the \"(.*)\" page/, async (user, page) => {
   }
 });
 
-Given(/that James has already registered to Conduit app/, async () => {
-  try {
-    let request = await registerUser();
-    console.log("response:", request.data);
-  } catch (error) {
-    console.log("error:", error);
-  }
+Given(/(.*) has already registered to Conduit app/, async (user) => {
+  return await registerUser(user.toLowerCase());
 });
 
 When(/(.*) sign up with valid credentials/, async (user) => {
@@ -104,9 +99,4 @@ Then(/Your Feed is empty/, async () => {
 
 Then(/error message \"(.*)\" is shown/, async (error) => {
   return signUp.expect.element("@errorMsg").text.to.contain(error);
-});
-
-Then(/the Sign up page is shown/, async () => {
-  client.assert.urlContains("/register");
-  return signUp.assert.containsText("@header", "Sign Up");
 });

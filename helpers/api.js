@@ -1,20 +1,50 @@
 const axios = require("axios").default;
+const { client } = require("nightwatch-api");
 const fs = require("fs");
 let rawJson = fs.readFileSync("conduit.conf.json");
 let json = JSON.parse(rawJson);
 let apiUrl = json.env.apiUrl;
-let user = json.users.james;
+let article = json.articles.nightwatch;
 
-exports.registerUser = () => {
+exports.registerUser = (userId) => {
   let endpoint = `${apiUrl}/api/users`;
+
+  let user = json.users[userId];
   let payload = { user };
   console.log("registering user...");
   return axios.post(endpoint, payload);
 };
 
-exports.loginUser = (userId = user) => {
+exports.loginUser = async (userId) => {
   let endpoint = `${apiUrl}/api/users/login`;
+  let user = json.users[userId];
   let payload = { user: { email: user.email, password: user.password } };
   console.log("login user...");
-  return axios.post(endpoint, payload);
+  const response = await axios.post(endpoint, payload);
+  await client.execute(
+    function () {
+      return window.localStorage.setItem("jwt", arguments[0]);
+    },
+    [response.data.user.token]
+  );
+
+  return client.refresh();
+};
+
+exports.publishArticle = async (userId) => {
+  const response = await this.registerUser(userId);
+  const token = response.data.user.token;
+  let endpoint = `${apiUrl}/api/articles`;
+  let payload = {
+    article: {
+      title: article.title,
+      description: article.description,
+      body: article.body,
+      tagList: article.tagList,
+    },
+  };
+  console.log("publishing article...");
+  return axios.post(endpoint, payload, {
+    headers: { authorization: `Token ${token}` },
+  });
 };
