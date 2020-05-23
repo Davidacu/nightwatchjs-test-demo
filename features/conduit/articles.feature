@@ -29,7 +29,7 @@ Feature: Articles
         Given an article posted by James is currently displayed
         And James has already logged in to conduit
         When James deletes the article
-        Then Jame's article is not longer shown
+        Then James article is not longer shown
         And the Home page is shown
 
     @conduit

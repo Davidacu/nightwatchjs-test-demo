@@ -1,15 +1,11 @@
 const axios = require("axios").default;
 const { client } = require("nightwatch-api");
-const fs = require("fs");
-let rawJson = fs.readFileSync("conduit.conf.json");
-let json = JSON.parse(rawJson);
-let apiUrl = json.env.apiUrl;
-let article = json.articles.nightwatch;
+const { apiUrl, getUser } = require("../helpers/data-loader");
 
 exports.registerUser = (userId) => {
   let endpoint = `${apiUrl}/api/users`;
 
-  let user = json.users[userId];
+  let user = getUser(userId);
   let payload = { user };
   console.log("registering user...");
   return axios.post(endpoint, payload);
@@ -17,7 +13,7 @@ exports.registerUser = (userId) => {
 
 exports.loginUser = async (userId) => {
   let endpoint = `${apiUrl}/api/users/login`;
-  let user = json.users[userId];
+  let user = getUser(userId);
   let payload = { user: { email: user.email, password: user.password } };
   console.log("login user...");
   const response = await axios.post(endpoint, payload);
@@ -31,8 +27,8 @@ exports.loginUser = async (userId) => {
   return client.refresh();
 };
 
-exports.publishArticle = async (userId) => {
-  const response = await this.registerUser(userId);
+exports.publishArticle = async (article) => {
+  const response = await this.registerUser(article.author);
   const token = response.data.user.token;
   let endpoint = `${apiUrl}/api/articles`;
   let payload = {
@@ -44,6 +40,20 @@ exports.publishArticle = async (userId) => {
     },
   };
   console.log("publishing article...");
+  return axios.post(endpoint, payload, {
+    headers: { authorization: `Token ${token}` },
+  });
+};
+
+exports.postComment = async (userId, articleId, comment) => {
+  const response = await this.registerUser(userId);
+  const token = response.data.user.token;
+  let endpoint = `${apiUrl}/api/articles/${articleId}/comments`;
+  let payload = {
+    comment: {
+      body: comment,
+    },
+  };
   return axios.post(endpoint, payload, {
     headers: { authorization: `Token ${token}` },
   });

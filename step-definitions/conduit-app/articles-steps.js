@@ -1,10 +1,6 @@
 const { Given, When, Then } = require("cucumber");
 const { client } = require("nightwatch-api");
-const fs = require("fs");
-const rawJson = fs.readFileSync("conduit.conf.json");
-const config = JSON.parse(rawJson);
-const article = config.articles.nightwatch;
-const appUrl = config.env.appUrl;
+const { getArticleByAuthor, appUrl } = require("../../helpers/data-loader");
 const {
   registerUser,
   loginUser,
@@ -15,8 +11,8 @@ Given(
   /an article posted by (.*) is displayed at the global feed/,
   async (user) => {
     const homePage = client.page.home();
-
-    await publishArticle(user.toLowerCase());
+    const article = getArticleByAuthor(user.toLowerCase());
+    await publishArticle(article);
     homePage.click("@globalFeedBtn");
   }
 );
@@ -25,8 +21,9 @@ When(/(.*) opens (.*) article/, async (user, author) => {
   const homePage = client.page.home();
   return homePage.openArticleByAuthor(author);
 });
-When(/James publishes a new article/, async () => {
+When(/(.*) publishes a new article/, async (user) => {
   const homePage = client.page.home();
+  const article = getArticleByAuthor(user.toLowerCase());
   const navBar = homePage.section.navBar;
   const newPost = client.page.articleEditor();
   navBar.click("@newPost");
@@ -42,8 +39,9 @@ When(/James publishes a new article/, async () => {
   return await newPost.click("@publishBtn");
 });
 
-Then(/James new article is loaded properly/, async () => {
+Then(/(.*) new article is loaded properly/, async (user) => {
   const articlePage = client.page.article();
+  const article = getArticleByAuthor(user.toLowerCase());
   const today = new Date();
   const format = {
     weekday: "short",
@@ -70,16 +68,17 @@ Then(/James new article is loaded properly/, async () => {
 });
 
 Given(/an article posted by (.*) is currently displayed/, async (user) => {
-  await publishArticle(user.toLowerCase());
+  const article = getArticleByAuthor(user.toLowerCase());
+  await publishArticle(article);
   return client.url(`${appUrl}/article/${article.title.toLowerCase()}`);
 });
 
 Given(/Jame's article is open/, async () => {});
 
-When(/James edits the article/, async () => {
+When(/(.*) edits the article/, async (user) => {
   const articlePage = client.page.article();
   const editorPage = client.page.articleEditor();
-
+  const article = getArticleByAuthor(user.toLowerCase());
   //go to edit article page
   articlePage.click("@editBtn");
 
@@ -104,8 +103,9 @@ Then(/James new article does not have any comments/, async () => {
   return articlePage.assert.not.elementPresent("@comments");
 });
 
-Then(/James article is updated/, async () => {
+Then(/(.*) article is updated/, async (user) => {
   const articlePage = client.page.article();
+  const article = getArticleByAuthor(user.toLowerCase());
   const today = new Date();
   const format = {
     weekday: "short",
@@ -143,7 +143,8 @@ When(/(.*) deletes the article/, async (user) => {
   return articlePage.click("@deleteBtn");
 });
 
-Then(/Jame's article is not longer shown/, async () => {
+Then(/(.*) article is not longer shown/, async (user) => {
+  const article = getArticleByAuthor(user.toLowerCase());
   return client.assert.not.urlContains(
     `/article/${article.title.toLowerCase()}`
   );

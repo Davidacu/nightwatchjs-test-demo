@@ -24,6 +24,7 @@
     "test-conduit-signup": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/signup.feature --format node_modules/cucumber-pretty",
     "test-conduit-login": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/login.feature --format node_modules/cucumber-pretty",
     "test-conduit-articles": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/articles.feature --format node_modules/cucumber-pretty",
+    "test-conduit-comments": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/comments.feature --format node_modules/cucumber-pretty",
     "test-conduit-debug": "cucumber-js --require cucumber.conf.js --require step-definitions features/debug/debug-login.feature --format node_modules/cucumber-pretty"
   },
   "repository": {
