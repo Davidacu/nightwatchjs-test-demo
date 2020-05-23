@@ -44,7 +44,7 @@ Feature: Register
 
     @conduit
     Scenario: Should fail registration if email is already registered
-        Given that James has already registered to Conduit app
+        Given James has already registered to Conduit app
         And James has not logged in at conduit
         And James is at the Sign up page
         When James sign up with valid credentials

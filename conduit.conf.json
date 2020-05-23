@@ -23,6 +23,17 @@
       "body": "Nightwatch.js is an integrated, easy to use End-to-End testing solution for web applications and websites, written in Node.JS.",
       "tagList": ["nightwatchjs", "e2e", "webDriver"],
       "author": "james"
+    },
+    "cypress": {
+      "title": "cypressjs",
+      "description": "End-to-End testing frameworks",
+      "body": "cypress.io is an integrated, easy to use End-to-End testing solution for web applications and websites,cypress is based on a completely new architecture.",
+      "tagList": ["cypress", "e2e", "ui"],
+      "author": "john"
     }
+  },
+  "comments": {
+    "james": { "body": "James says hello" },
+    "john": { "body": "John says hello" }
   }
 }

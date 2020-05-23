@@ -14,7 +14,7 @@ Feature: Login
 
     @conduit
     Scenario: Login should fail when entering incorrect password
-        Given that James has already registered to Conduit app
+        Given James has already registered to Conduit app
         And James is at the Login page
         When James attemps to login with incorrect password
         Then error message "email or password is incorrect" is shown
@@ -22,7 +22,7 @@ Feature: Login
 
     @conduit
     Scenario: James should log in successfully when entering correct credentials
-        Given that James has already registered to Conduit app
+        Given James has already registered to Conduit app
         And James is at the Login page
         When James attemps to login with correct credentials
         Then James registered username is shown at navigation bar

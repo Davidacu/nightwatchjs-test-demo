@@ -98,5 +98,5 @@ Then(/Your Feed is empty/, async () => {
 });
 
 Then(/error message \"(.*)\" is shown/, async (error) => {
-  return signUp.expect.element("@errorMsg").text.to.contain(error);
+  return signUp.expect.element("@errorMsg").text.to.contain(error).before(1000);
 });
