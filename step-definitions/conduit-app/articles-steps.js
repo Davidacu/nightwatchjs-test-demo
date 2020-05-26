@@ -8,18 +8,20 @@ const {
 } = require("../../helpers/api");
 
 Given(
-  /an article posted by (.*) is displayed at the global feed/,
+  /a new article posted by (.*) is displayed at the global feed/,
   async (user) => {
     const homePage = client.page.home();
+    const articleFeed = client.page.articleFeed();
     const article = getArticleByAuthor(user.toLowerCase());
     await publishArticle(article);
-    homePage.click("@globalFeedBtn");
+    await homePage.navigate();
+    return await articleFeed.click("@globalFeedBtn");
   }
 );
 
-When(/(.*) opens (.*) article/, async (user, author) => {
-  const homePage = client.page.home();
-  return homePage.openArticleByAuthor(author);
+When(/(.*) opens (.*) article$/, async (user, author) => {
+  const articleFeed = client.page.articleFeed();
+  return articleFeed.openArticleByAuthor(author);
 });
 When(/(.*) publishes a new article/, async (user) => {
   const homePage = client.page.home();
@@ -67,7 +69,7 @@ Then(/(.*) new article is loaded properly/, async (user) => {
     .text.to.equal(publishedDate);
 });
 
-Given(/an article posted by (.*) is currently displayed/, async (user) => {
+Given(/a new article posted by (.*) is currently displayed/, async (user) => {
   const article = getArticleByAuthor(user.toLowerCase());
   await publishArticle(article);
   return client.url(`${appUrl}/article/${article.title.toLowerCase()}`);

@@ -19,14 +19,14 @@ Feature: Articles
 
     @conduit
     Scenario: James can edit his post
-        Given an article posted by James is currently displayed
+        Given a new article posted by James is currently displayed
         And James has already logged in to conduit
         When James edits the article
         Then James article is updated
 
     @conduit
     Scenario: Delete Post
-        Given an article posted by James is currently displayed
+        Given a new article posted by James is currently displayed
         And James has already logged in to conduit
         When James deletes the article
         Then James article is not longer shown
@@ -36,7 +36,7 @@ Feature: Articles
     Scenario: John cannot delete or edit Jame's Article
         Given John has already registered to Conduit app
         And John has already logged in to conduit
-        And an article posted by James is displayed at the global feed
+        And a new article posted by James is displayed at the global feed
         When John opens James article
         Then James new article is loaded properly
         But John cannot delete the article

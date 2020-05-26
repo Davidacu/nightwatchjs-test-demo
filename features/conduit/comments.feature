@@ -4,7 +4,7 @@ Feature: Comments
 
     @conduit
     Scenario: John can write a post in James article
-        Given an article posted by James is currently displayed
+        Given a new article posted by James is currently displayed
         And John has already registered to Conduit app
         And John has already logged in to conduit
         When John posts a comment

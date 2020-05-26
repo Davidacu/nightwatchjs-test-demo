@@ -89,10 +89,11 @@ Then(/the navigation bar does not display \"(.*)\"/, async (item) => {
   return homePage.expect.section("@navBar").text.to.not.contain(item);
 });
 
-Then(/Your Feed is empty/, async () => {
-  homePage.expect.element("@activeFeed").text.to.contain("Your Feed");
-  homePage.expect.elements("@articles").count.to.equal(1);
-  return homePage.expect
+Then(/\"(.*)\" is empty/, async (feedId) => {
+  const articleFeed = client.page.articleFeed();
+  articleFeed.expect.element("@activeFeed").text.to.contain(feedId);
+  articleFeed.expect.elements("@articles").count.to.equal(1);
+  return articleFeed.expect
     .element("@articles")
     .text.to.contain("No articles are here... yet.");
 });
