@@ -14,6 +14,26 @@
       "username": "john",
       "email": "david.acu0291@gmail.com",
       "password": "qafirst"
+    },
+    "david": {
+      "username": "david",
+      "email": "david.acu02912@gmail.com",
+      "password": "qafirst"
+    },
+    "kaitlin": {
+      "username": "kaitlin",
+      "email": "david.acu02913@gmail.com",
+      "password": "qafirst"
+    },
+    "hector": {
+      "username": "hector",
+      "email": "david.acu02914@gmail.com",
+      "password": "qafirst"
+    },
+    "sam": {
+      "username": "sam",
+      "email": "david.acu02915@gmail.com",
+      "password": "qafirst"
     }
   },
   "articles": {

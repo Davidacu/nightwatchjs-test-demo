@@ -1,11 +1,17 @@
 const { Given, When, Then } = require("cucumber");
 const { client } = require("nightwatch-api");
-const { getArticleByAuthor, appUrl } = require("../../helpers/data-loader");
+const {
+  getArticleByAuthor,
+  getUser,
+  appUrl,
+} = require("../../helpers/data-loader");
 const {
   registerUser,
   loginUser,
   publishArticle,
+  favoriteArticle,
 } = require("../../helpers/api");
+let assert = require("assert");
 
 Given(
   /a new article posted by (.*) is displayed at the global feed/,
@@ -161,3 +167,55 @@ Then(/John cannot edit the article/, async () => {
   const articlePage = client.page.article();
   return articlePage.assert.not.elementPresent("@editBtn");
 });
+
+When(/.* .*likes an article written by (.*)/, async (author) => {
+  const articleFeed = client.page.articleFeed();
+
+  await articleFeed.likeArticleByAuthor(author);
+});
+
+Given(
+  /a new article written by (.*) has been favorited by (.*)/,
+  async (author, user) => {
+    const article = getArticleByAuthor(author);
+    await publishArticle(article);
+    await favoriteArticle(article.title, user);
+  }
+);
+
+Given(
+  /an article written by (.*) has been favorited by (.*)/,
+  async (author, users) => {
+    const article = getArticleByAuthor(author);
+    await publishArticle(article);
+    let promises = [];
+    users.split(",").forEach((user) => {
+      promises.push(favoriteArticle(article.title, user));
+    });
+    await Promise.all(promises);
+  }
+);
+
+Then(
+  /the article written by (.*) has now (.*) likes/,
+  async (author, likeCount) => {
+    const article = getArticleByAuthor(author);
+    const articleFeed = client.page.articleFeed();
+    let actualCount;
+    //const actualCount = await articleFeed.getLikesByArticle(article);
+    await articleFeed.getText(
+      {
+        selector: `//a[contains(@class,'author') and contains(@href,'${article.author}')]//ancestor::div[@class='article-preview']//h1[contains(text(),'${article.title}')]//ancestor::div[@class='article-preview']//button`,
+        locateStrategy: "xpath",
+      },
+      function (result) {
+        actualCount = result.value;
+      }
+    );
+    assert.equal(
+      actualCount,
+      likeCount,
+      `expected ${likeCount} likes but found ${actualCount}`
+    );
+  }
+);

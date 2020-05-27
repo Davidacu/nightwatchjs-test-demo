@@ -17,6 +17,30 @@ const commands = {
       locateStrategy: "xpath",
     });
   },
+  likeArticleByAuthor: function (author) {
+    return this.click({
+      selector: `//a[contains(@class,'author') and contains(@href,'${author.toLowerCase()}')]//ancestor::div[@class='article-preview']//i[@class='ion-heart']`,
+      locateStrategy: "xpath",
+    });
+  },
+  getLikesByArticle: async function (article) {
+    let value;
+    this.waitForElementPresent({
+      selector: `//a[contains(@class,'author') and contains(@href,'${article.author}')]//ancestor::div[@class='article-preview']//h1[contains(text(),'${article.title}')]`,
+      locateStrategy: "xpath",
+    });
+    return this.getText(
+      {
+        selector: `//a[contains(@class,'author') and contains(@href,'${article.author}')]//ancestor::div[@class='article-preview']//h1[contains(text(),'${article.title}')]`,
+        locateStrategy: "xpath",
+      },
+      function (result) {
+        console.log("result:", result);
+        value = result.value;
+        return value;
+      }
+    );
+  },
 };
 module.exports = {
   commands: [commands],

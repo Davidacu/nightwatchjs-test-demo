@@ -9,7 +9,9 @@ exports.getCommentByAuthor = function (author) {
 };
 
 exports.getArticleByAuthor = function (author) {
-  return Object.values(json.articles).filter((e) => e.author == author)[0];
+  return Object.values(json.articles).filter(
+    (e) => e.author == author.toLowerCase()
+  )[0];
 };
 
 exports.getUser = function (userId) {

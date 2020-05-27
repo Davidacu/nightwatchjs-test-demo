@@ -58,3 +58,28 @@ exports.postComment = async (userId, articleId, comment) => {
     headers: { authorization: `Token ${token}` },
   });
 };
+
+exports.favoriteArticle = async (articleId, userId) => {
+  const _userId = userId.toLowerCase();
+  let response = await this.registerUserIfNeeded(_userId);
+  const token = response.data.user.token;
+  let endpoint = `${apiUrl}/api/articles/${articleId.toLowerCase()}/favorite`;
+  let payload = {};
+  console.log("liking article....");
+  return axios.post(endpoint, payload, {
+    headers: { authorization: `Token ${token}` },
+  });
+};
+
+exports.registerUserIfNeeded = async (userId) => {
+  let response;
+
+  try {
+    response = await this.loginUser(userId);
+  } catch (error) {
+    if (error.response.status === 404) {
+      response = await this.registerUser(userId);
+    } else throw error;
+  }
+  return response;
+};

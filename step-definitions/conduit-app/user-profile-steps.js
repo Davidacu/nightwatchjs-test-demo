@@ -12,6 +12,15 @@ When(/(.*) opens (.*) profile from (.*)/, async (user, author, targetFeed) => {
   await articleFeed.openFeed(targetFeed);
   await articleFeed.openProfileByAuthor(author);
 });
+
+When(/(.*) opens his favorited articles/, async (user) => {
+  const homePage = client.page.home();
+  const topNav = homePage.section.navBar;
+  const articleFeed = client.page.articleFeed();
+
+  await topNav.click("@userPic");
+  await articleFeed.openFeed("Favorited Articles");
+});
 Then(/(.*) profile is loaded properly/, async (user) => {
   const userProfilePage = client.page.userProfile();
   const articleFeed = client.page.articleFeed();

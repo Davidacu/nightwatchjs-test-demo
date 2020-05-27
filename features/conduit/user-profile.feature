@@ -45,12 +45,12 @@ Feature: User Profile
         Given a new article posted by James is currently displayed
         And James has already logged in to conduit
         When James opens his profile via top navigation
-        Then James new article is displayed at "My Articles"
+        Then the article written by James is displayed at "My Articles"
     @conduit
     Scenario: John's new article should not appear in My articles art James profile
         Given a new article posted by John is currently displayed
         And a new article posted by James is displayed at the global feed
         And John has already logged in to conduit
         When John opens James profile from Global Feed
-        Then John new article is not displayed at "My Articles"
-        But James new article is displayed at "My Articles"
+        Then the article written by John is not displayed at "My Articles"
+        But the article written by James is displayed at "My Articles"
