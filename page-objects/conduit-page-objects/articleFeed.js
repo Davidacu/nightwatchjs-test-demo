@@ -41,6 +41,18 @@ const commands = {
       }
     );
   },
+  assertTimelineHasPostsFrom: function (author) {
+    return this.assert.elementPresent({
+      selector: `//div[@class='article-preview']//a[@class='author' and @href='/@${author.toLowerCase()}']`,
+      locateStrategy: "xpath",
+    });
+  },
+  assertTimelineHasNotPostsFrom: function (author) {
+    return this.assert.not.elementPresent({
+      selector: `//div[@class='article-preview']//a[@class='author' and @href='/@${author.toLowerCase()}']`,
+      locateStrategy: "xpath",
+    });
+  },
 };
 module.exports = {
   commands: [commands],

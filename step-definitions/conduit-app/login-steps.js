@@ -35,7 +35,14 @@ When(/James press \"(.*)\" at (.*) page/, async (fieldId, pageId) => {
 });
 
 Given(/(.*) has already logged in to conduit/, async (user) => {
-  return loginUser(user.toLowerCase());
+  const response = await loginUser(user.toLowerCase());
+  await client.execute(
+    function () {
+      return window.localStorage.setItem("jwt", arguments[0]);
+    },
+    [response.data.user.token]
+  );
+  return await client.refresh();
 });
 
 Given(/(.*) has not logged in at conduit/, (userId) => {

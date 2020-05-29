@@ -5,6 +5,20 @@ Feature: Followers
     Your Feed
     Global Feed
 
-    Scenario: Jame's feed is populated with articles from John and Kasie after following them.
+    @conduit
+    Scenario: James timeline shows posts from John
+        Given John has written an article
+        And James is not following John
+        And James has already logged in to conduit
+        When James starts following John
+        And James navigates to conduit home page
+        Then the user timeline shows articles written by John
 
-    Scenario: John's articles dissapear from Jame's feed after being unfollowed
+    @conduit
+    Scenario: James timeline removes posts from John when unfollowed
+        Given John has written an article
+        And James is following John
+        And James has already logged in to conduit
+        When James stops following John
+        And James navigates to conduit home page
+        Then the user timeline does not show articles written by John

@@ -5,12 +5,7 @@ const {
   getUser,
   appUrl,
 } = require("../../helpers/data-loader");
-const {
-  registerUser,
-  loginUser,
-  publishArticle,
-  favoriteArticle,
-} = require("../../helpers/api");
+let Api = require("../../helpers/api");
 let assert = require("assert");
 
 Given(
@@ -19,7 +14,8 @@ Given(
     const homePage = client.page.home();
     const articleFeed = client.page.articleFeed();
     const article = getArticleByAuthor(user.toLowerCase());
-    await publishArticle(article);
+    const session = await Api.createSession(user);
+    await session.publishArticle(article);
     await homePage.navigate();
     return await articleFeed.click("@globalFeedBtn");
   }
@@ -77,7 +73,8 @@ Then(/(.*) new article is loaded properly/, async (user) => {
 
 Given(/a new article posted by (.*) is currently displayed/, async (user) => {
   const article = getArticleByAuthor(user.toLowerCase());
-  await publishArticle(article);
+  const session = await Api.createSession(user);
+  await session.publishArticle(article);
   return client.url(`${appUrl}/article/${article.title.toLowerCase()}`);
 });
 
@@ -178,8 +175,11 @@ Given(
   /a new article written by (.*) has been favorited by (.*)/,
   async (author, user) => {
     const article = getArticleByAuthor(author);
-    await publishArticle(article);
-    await favoriteArticle(article.title, user);
+    const authorSession = await Api.createSession(author);
+    const userSession = await Api.createSession(user);
+
+    await authorSession.publishArticle(article);
+    await userSession.favoriteArticle(article.title);
   }
 );
 
@@ -187,12 +187,19 @@ Given(
   /an article written by (.*) has been favorited by (.*)/,
   async (author, users) => {
     const article = getArticleByAuthor(author);
-    await publishArticle(article);
+    const userArr = users.split(",");
     let promises = [];
-    users.split(",").forEach((user) => {
-      promises.push(favoriteArticle(article.title, user));
-    });
-    await Promise.all(promises);
+
+    const authorSession = await Api.createSession(author);
+    await authorSession.publishArticle(article);
+
+    for (const user of userArr) {
+      let userSession = await Api.createSession(user);
+      let promise = userSession.favoriteArticle(article.title);
+      promises.push(promise);
+    }
+
+    return await Promise.all(promises);
   }
 );
 
@@ -217,5 +224,20 @@ Then(
       likeCount,
       `expected ${likeCount} likes but found ${actualCount}`
     );
+  }
+);
+
+Then(/the user timeline shows articles written by (.*)/, async (author) => {
+  const articleFeed = client.page.articleFeed();
+  articleFeed.expect.element("@activeFeed").text.to.equal("Your Feed");
+  articleFeed.assertTimelineHasPostsFrom(author);
+});
+
+Then(
+  /the user timeline does not show articles written by (.*)/,
+  async (author) => {
+    const articleFeed = client.page.articleFeed();
+    articleFeed.expect.element("@activeFeed").text.to.equal("Your Feed");
+    articleFeed.assertTimelineHasNotPostsFrom(author);
   }
 );

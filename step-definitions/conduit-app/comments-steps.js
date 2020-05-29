@@ -5,19 +5,18 @@ const {
   getArticleByAuthor,
   appUrl,
 } = require("../../helpers/data-loader");
-const { publishArticle, postComment } = require("../../helpers/api");
+let Api = require("../../helpers/api");
 
 Given(
   /(.*) has posted a comment in an article written by (.*)/,
   async (user, author) => {
+    const authorSession = await Api.createSession(author);
+    const userSession = await Api.createSession(user);
     const comment = getCommentByAuthor(user.toLowerCase());
     const article = getArticleByAuthor(author.toLowerCase());
-    await publishArticle(article);
-    return await postComment(
-      user.toLowerCase(),
-      article.title.toLowerCase(),
-      comment
-    );
+
+    await authorSession.publishArticle(article);
+    return await userSession.postComment(article.title.toLowerCase(), comment);
   }
 );
 
