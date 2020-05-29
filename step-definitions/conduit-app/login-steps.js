@@ -1,43 +1,52 @@
 const { Given, When } = require("cucumber");
 const { client } = require("nightwatch-api");
-const fs = require("fs");
-let rawJson = fs.readFileSync("conduit.conf.json");
-let json = JSON.parse(rawJson);
-let james = json.users.james;
+const { getUser } = require("../../helpers/data-loader");
 const { loginUser } = require("../../helpers/api");
+const { createPage } = require("../../helpers/page-factory");
 
-When(/James attemps to login with (.*)/, async (fieldId) => {
+When(/(.*) attemps to login with (.*)/, async (userId, fieldId) => {
+  const user = getUser(userId.toLowerCase());
   const homePage = client.page.home();
   const navBar = homePage.section.navBar;
   navBar.click("@signInBtn");
   const loginPage = client.page.login();
   loginPage.assert.containsText("@header", "Sign In");
 
-  if (fieldId === "empty password") loginPage.setValue("@email", james.email);
-  if (fieldId === "empty email")
-    loginPage.setValue("@password", james.password);
+  if (fieldId === "empty password") loginPage.setValue("@email", user.email);
+  if (fieldId === "empty email") loginPage.setValue("@password", user.password);
   if (fieldId === "incorrect password") {
-    loginPage.setValue("@email", james.email);
+    loginPage.setValue("@email", user.email);
     loginPage.setValue("@password", "asdf");
   }
   if (fieldId === "correct credentials") {
-    loginPage.setValue("@email", james.email);
-    loginPage.setValue("@password", james.password);
+    loginPage.setValue("@email", user.email);
+    loginPage.setValue("@password", user.password);
   }
   return loginPage.click("@signInBtn");
 });
 
-When(/James press \"(.*)\"/, async (fieldId) => {
-  const loginPage = client.page.login();
-  if (fieldId === "Need an account?") return loginPage.click("@needAccountBtn");
-  return undefined;
+When(/James press \"(.*)\" at (.*) page/, async (fieldId, pageId) => {
+  const page = createPage(pageId);
+
+  if (fieldId === "Need an account?") return page.click("@needAccountBtn");
+  if (fieldId === "Edit profile settings")
+    return page.click("@profileSettingsBtn");
+  throw `field '${fieldId} is not defined'`;
 });
 
 Given(/(.*) has already logged in to conduit/, async (user) => {
-  return loginUser(user.toLowerCase());
+  const response = await loginUser(user.toLowerCase());
+  await client.execute(
+    function () {
+      return window.localStorage.setItem("jwt", arguments[0]);
+    },
+    [response.data.user.token]
+  );
+  return await client.refresh();
 });
 
-Given(/James has not logged in at conduit/, () => {
+Given(/(.*) has not logged in at conduit/, (userId) => {
   const homePage = client.page.home();
-  return homePage.expect.section("@navBar").text.to.not.contain(james.username);
+  const user = getUser(userId.toLowerCase());
+  return homePage.expect.section("@navBar").text.to.not.contain(user.username);
 });

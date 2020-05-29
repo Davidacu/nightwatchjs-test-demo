@@ -1,25 +1,29 @@
 const { Given, When, Then } = require("cucumber");
 const { client } = require("nightwatch-api");
-const { getArticleByAuthor, appUrl } = require("../../helpers/data-loader");
 const {
-  registerUser,
-  loginUser,
-  publishArticle,
-} = require("../../helpers/api");
+  getArticleByAuthor,
+  getUser,
+  appUrl,
+} = require("../../helpers/data-loader");
+let Api = require("../../helpers/api");
+let assert = require("assert");
 
 Given(
-  /an article posted by (.*) is displayed at the global feed/,
+  /a new article posted by (.*) is displayed at the global feed/,
   async (user) => {
     const homePage = client.page.home();
+    const articleFeed = client.page.articleFeed();
     const article = getArticleByAuthor(user.toLowerCase());
-    await publishArticle(article);
-    homePage.click("@globalFeedBtn");
+    const session = await Api.createSession(user);
+    await session.publishArticle(article);
+    await homePage.navigate();
+    return await articleFeed.click("@globalFeedBtn");
   }
 );
 
-When(/(.*) opens (.*) article/, async (user, author) => {
-  const homePage = client.page.home();
-  return homePage.openArticleByAuthor(author);
+When(/(.*) opens (.*) article$/, async (user, author) => {
+  const articleFeed = client.page.articleFeed();
+  return articleFeed.openArticleByAuthor(author);
 });
 When(/(.*) publishes a new article/, async (user) => {
   const homePage = client.page.home();
@@ -67,9 +71,10 @@ Then(/(.*) new article is loaded properly/, async (user) => {
     .text.to.equal(publishedDate);
 });
 
-Given(/an article posted by (.*) is currently displayed/, async (user) => {
+Given(/a new article posted by (.*) is currently displayed/, async (user) => {
   const article = getArticleByAuthor(user.toLowerCase());
-  await publishArticle(article);
+  const session = await Api.createSession(user);
+  await session.publishArticle(article);
   return client.url(`${appUrl}/article/${article.title.toLowerCase()}`);
 });
 
@@ -159,3 +164,80 @@ Then(/John cannot edit the article/, async () => {
   const articlePage = client.page.article();
   return articlePage.assert.not.elementPresent("@editBtn");
 });
+
+When(/.* .*likes an article written by (.*)/, async (author) => {
+  const articleFeed = client.page.articleFeed();
+
+  await articleFeed.likeArticleByAuthor(author);
+});
+
+Given(
+  /a new article written by (.*) has been favorited by (.*)/,
+  async (author, user) => {
+    const article = getArticleByAuthor(author);
+    const authorSession = await Api.createSession(author);
+    const userSession = await Api.createSession(user);
+
+    await authorSession.publishArticle(article);
+    await userSession.favoriteArticle(article.title);
+  }
+);
+
+Given(
+  /an article written by (.*) has been favorited by (.*)/,
+  async (author, users) => {
+    const article = getArticleByAuthor(author);
+    const userArr = users.split(",");
+    let promises = [];
+
+    const authorSession = await Api.createSession(author);
+    await authorSession.publishArticle(article);
+
+    for (const user of userArr) {
+      let userSession = await Api.createSession(user);
+      let promise = userSession.favoriteArticle(article.title);
+      promises.push(promise);
+    }
+
+    return await Promise.all(promises);
+  }
+);
+
+Then(
+  /the article written by (.*) has now (.*) likes/,
+  async (author, likeCount) => {
+    const article = getArticleByAuthor(author);
+    const articleFeed = client.page.articleFeed();
+    let actualCount;
+    //const actualCount = await articleFeed.getLikesByArticle(article);
+    await articleFeed.getText(
+      {
+        selector: `//a[contains(@class,'author') and contains(@href,'${article.author}')]//ancestor::div[@class='article-preview']//h1[contains(text(),'${article.title}')]//ancestor::div[@class='article-preview']//button`,
+        locateStrategy: "xpath",
+      },
+      function (result) {
+        actualCount = result.value;
+      }
+    );
+    assert.equal(
+      actualCount,
+      likeCount,
+      `expected ${likeCount} likes but found ${actualCount}`
+    );
+  }
+);
+
+Then(/the user timeline shows articles written by (.*)/, async (author) => {
+  const articleFeed = client.page.articleFeed();
+  articleFeed.expect.element("@activeFeed").text.to.equal("Your Feed");
+  articleFeed.assertTimelineHasPostsFrom(author);
+});
+
+Then(
+  /the user timeline does not show articles written by (.*)/,
+  async (author) => {
+    const articleFeed = client.page.articleFeed();
+    articleFeed.expect.element("@activeFeed").text.to.equal("Your Feed");
+    articleFeed.assertTimelineHasNotPostsFrom(author);
+  }
+);

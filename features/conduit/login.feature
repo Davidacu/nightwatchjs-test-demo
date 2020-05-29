@@ -35,5 +35,5 @@ Feature: Login
     @conduit
     Scenario: Can switch to Sign up by click on 'Need an account?'
         Given James is at the Login page
-        When James press "Need an account?"
+        When James press "Need an account?" at Login page
         Then the Sign up page is shown

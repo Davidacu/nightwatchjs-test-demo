@@ -6,12 +6,6 @@ const commands = {
   isAt: function () {
     return this.api.assert.urlEquals(this.url + "/");
   },
-  openArticleByAuthor: function (author) {
-    return this.click({
-      selector: `//a[contains(@class,'author') and contains(@href,${author})]//ancestor::div[@class='article-preview']//a[@class='preview-link']//h1`,
-      locateStrategy: "xpath",
-    });
-  },
 };
 
 module.exports = {
@@ -34,19 +28,10 @@ module.exports = {
         newPost: {
           selector: 'a[href="/editor"]',
         },
+        userPic: {
+          selector: 'img[class="user-pic"]',
+        },
       },
-    },
-  },
-  elements: {
-    activeFeed: {
-      selector: 'a[class="nav-link active"]',
-    },
-    globalFeedBtn: {
-      selector: '//a[contains(text(),"Global Feed")]',
-      locateStrategy: "xpath",
-    },
-    articles: {
-      selector: 'div[class="article-preview"]',
     },
   },
 };

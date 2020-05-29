@@ -15,7 +15,7 @@ Feature: Register
         And the navigation bar displays "Settings"
         And the navigation bar does not display "Sign in"
         And the navigation bar does not display "Sign Up"
-        And Your Feed is empty
+        And "Your Feed" is empty
 
     @conduit
     Scenario: Should provide valid email for Registration
