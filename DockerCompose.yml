@@ -34,7 +34,7 @@ services:
     environment:
       - HUB_HOST=selenium-hub
       - HUB_PORT=4444
-      - JAVA_OPTS=-Dselenium.LOGGER.level=ALL
+      #- JAVA_OPTS=-Dselenium.LOGGER.level=ALL
     ports:
       - "5800:5900"
 
