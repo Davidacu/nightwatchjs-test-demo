@@ -9,6 +9,7 @@
     "knex": "^0.21.1",
     "minimist": "^1.2.5",
     "nightwatch": "^1.3.4",
+    "npm-run-all": "^4.1.5",
     "optimist": "^0.6.1",
     "selenium-server": "^3.141.59",
     "sqlite3": "^4.2.0"
@@ -20,6 +21,12 @@
     "nightwatch-api": "^3.0.1"
   },
   "scripts": {
+    "postinstall": "run-s ci:client ci:server",
+    "ci:client": "cd app-client/conduit-frontend-submodule && npm ci",
+    "ci:server": "cd app-server/conduit-backend-submodule && npm ci",
+    "start": "concurrently npm:start:client npm:start:server",
+    "start:client": "cd app-client/conduit-frontend-submodule && npm start",
+    "start:server": "cd app-server/conduit-backend-submodule && npm start",
     "test": "cucumber-js --require cucumber.conf.js --require step-definitions --format node_modules/cucumber-pretty",
     "test-conduit-signup": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/signup.feature --format node_modules/cucumber-pretty",
     "test-conduit-login": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/login.feature --format node_modules/cucumber-pretty",
