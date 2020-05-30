@@ -20,7 +20,7 @@
     "nightwatch-api": "^3.0.1"
   },
   "scripts": {
-    "test": "cucumber-js --require cucumber.conf.js --require step-definitions --format node_modules/cucumber-pretty --parallel 2",
+    "test": "cucumber-js --require cucumber.conf.js --require step-definitions --format node_modules/cucumber-pretty",
     "test-conduit-signup": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/signup.feature --format node_modules/cucumber-pretty",
     "test-conduit-login": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/login.feature --format node_modules/cucumber-pretty",
     "test-conduit-articles": "cucumber-js --require cucumber.conf.js --require step-definitions features/conduit/articles.feature --format node_modules/cucumber-pretty",
