@@ -7,9 +7,15 @@ The application under test is Conduit, an example social blogging site (Medium.c
 * [Knex.js](http://knexjs.org/) is a SQL query builder, it is used in this project to build a helper module `data-loader.js` which cleans a sqlite3 DB. 
 * Selenium server is used to drive the browser, running the test locally will trigger the test in selenium server locally and will be managed by nightwatch, running the server in a docker container will trigger the tests in a dockerized selenium grid, see how to run it bellow.
 
-# Run the tests
+# Install
 * Clone this repo
+* init and checkout the git submodules `git submodule init` , `git submodule update`
 * `npm install` to install all required dependencies
+
+# Start the demo app
+* `npm start` will start the server and client
+
+# Run the tests
 * `npm test` to run all tests
 * in package.json you'll find other scripts that target a single feature, for instance `npm run test-conduit-signup` will only execute tests from `features/conduit/signup.feature`
 * When running the tests locally make sure you have google chrome installed, as this is the browser being targeted in `nightwatch.conf.js`
