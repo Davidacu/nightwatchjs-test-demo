@@ -1,0 +1,6 @@
+[submodule "app-server/conduit-backend-submodule"]
+	path = app-server/conduit-backend-submodule
+	url = https://github.com/Davidacu/hapipal-realworld-example-app.git
+[submodule "app-client/conduit-frontend-submodule"]
+	path = app-client/conduit-frontend-submodule
+	url = https://github.com/Davidacu/react-redux-realworld-example-app

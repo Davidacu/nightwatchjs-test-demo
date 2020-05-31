@@ -7,8 +7,8 @@ module.exports = function cleanDatabase() {
   const filename = join(
     __dirname,
     "..",
-    "..",
-    "hapipal-realworld-example-app",
+    "app-server",
+    "conduit-backend-submodule",
     ".tmp.db"
   );
   const knex = knexFactory({
