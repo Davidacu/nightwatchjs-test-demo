@@ -44,3 +44,17 @@ services:
       - selenium-hub
       - chrome
       - firefox
+      - conduit-client
+      - conduit-server
+
+  conduit-client:
+    build: ./app-client/conduit-frontend-submodule/
+    environment:
+      - API=http://conduit-api:3000/api
+    ports:
+      - 4100:4100
+
+  conduit-api:
+    build: ./app-server/conduit-backend-submodule/
+    ports:
+      - 3000:3000
